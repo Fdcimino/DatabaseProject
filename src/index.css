@@ -1,0 +1,26 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: auto;
+  background-color: #424242;
+}
+
+.cardList {
+  overflow-y: scroll;
+  height: 85%;
+}
+.cardList li {
+  display: block;
+}
+.cardList li > *{ 
+  display: inline-block;
+}
+
+.maxHeightFix{
+  max-height: 85vh;
+  height: 85vh;
+}
+
+.fixP{
+  margin-left: 5px;
+  margin-right: 5px;
+}
