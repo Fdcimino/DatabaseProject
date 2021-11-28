@@ -1,6 +1,19 @@
 # DatabaseProject
  Music database
 
-clone repo
-run npm init
-then npm start to run the project
+## libs used
+### node
+- electron-forge
+- electron
+- node-postgres
+
+### css
+- Materialize
+
+## how to setup
+- clone repo
+- run npm init
+
+
+## to run the program
+- npm start 
