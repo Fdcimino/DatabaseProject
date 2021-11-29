@@ -27,3 +27,14 @@ require node.js to run not complied version
 - search
 - look at users playlist
 - clicking on album or artist shows all songs in either
+
+## quick run down of how this application work
+Two threads
+- render
+- index
+
+render thread is incharge on the ui. It send and listens to requests from the index thread using ipcRenderer
+
+index thread gets the requests and responds using the ipcmain 
+
+the index thread is the thread that sends for the sql requests while the render uses the responses to show it on html
