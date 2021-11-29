@@ -19,3 +19,11 @@ require node.js to run not complied version
 
 ## to run the program
 - npm start 
+
+## TODO:
+- add to playlist
+- create user
+- remove from playlist
+- search
+- login
+- look at users playlist
