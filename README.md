@@ -1,8 +1,10 @@
 # DatabaseProject
  Music database
 
+require node.js to run not complied version
+
 ## libs used
-### node
+### node js
 - electron-forge
 - electron
 - node-postgres
