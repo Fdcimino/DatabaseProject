@@ -15,11 +15,17 @@
         <a href="#" class="left brand-logo fixP"> Song Database</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down fixP">
           <li id="Search" class="fixP"><input placeholder="search" id="searchTerms" type="text" class="white-text"></li>
+          <li class="switch fixP">
+            <label>
+              <input id="toSearch"type="checkbox">
+              <span class="lever"></span>
+            </label>
+          </li>
           <li><button onClick="getAllSongs()" class="btn fixP">Songs</button></li>
           <li><button onClick="getAllArtists()" class="btn fixP">Artists</button></li>
           <li><button onClick="getAllAlbums()" class="btn fixP">Albums</button></li>
-          <li id="login" class="fixP"><input placeholder="Username" id="Username" type="text" class="white-text"></li>
-          <li id="loginBTN" class="fixP"><button class='btn'>login</button></li>
+          <li  class="fixP"><input placeholder="Username" id="Username" type="text" class="white-text"></li>
+          <li  class="fixP"><button onClick="setUsername()" id="loginBTN"  class='btn'>login</button></li>
         </ul>
       </div>
     </nav>

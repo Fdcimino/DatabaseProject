@@ -6,6 +6,19 @@ allUsers = []
 allArtists = []
 allAlbums = []
 allPlaylists = []
+currentUser = ""
+
+
+
+function setUsername(){
+    username = document.getElementById("Username").value
+    currentUser = username;
+    console.log(currentUser)
+    document.getElementById("loginBTN").innerHTML = "ReLogin"
+    showSongs()
+}
+
+
 //The next functions gets all songs
 ipcRenderer.on('allSongs', (event, arg) => {
     allSongs = arg;
@@ -22,15 +35,24 @@ function showSongs(){
         let li = document.createElement('li')
         li.className = "collection-item  blue-grey darken-1"
         let text = document.createElement('p')
-        let addButton = document.createElement('a')
-        addButton.className = "btn-floating btn-large waves-effect waves-light green right"
-        let addIcon = document.createElement('i')
-        addIcon.innerHTML = "add"
-        addIcon.className = "material-icons"
-        addButton.appendChild(addIcon)
+
+        var addButton = ""
+        if(currentUser != ""){
+            let inputDiv = document.createElement('div')
+            let select = document.createElement('select')
+
+
+            addButton = document.createElement('a')
+            addButton.className = "btn btn-large waves-effect waves-light green right fixP"
+            let addIcon = document.createElement('i')
+            addIcon.innerHTML = "add"
+            addIcon.className = "material-icons"
+            addButton.appendChild(addIcon)
+        }
+       
 
         let playButton = document.createElement('a')
-        playButton.className = "btn-floating btn-large waves-effect waves-light green right"
+        playButton.className = "btn btn-large waves-effect waves-light green right fixP"
         let playIcon = document.createElement('i')
         playIcon.innerHTML = "fast_forward"
         playIcon.className = "material-icons"
@@ -39,7 +61,11 @@ function showSongs(){
         console.log(element)
         text.innerHTML = element.title + '</br>' + element.genre
         li.appendChild(text)
-        li.appendChild(addButton)
+        if( currentUser != ""){
+
+            li.appendChild(addButton)
+        }
+        
         li.appendChild(playButton)
         centerList.appendChild(li)
     })

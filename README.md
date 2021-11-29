@@ -25,5 +25,5 @@ require node.js to run not complied version
 - create user
 - remove from playlist
 - search
-- login
 - look at users playlist
+- clicking on album or artist shows all songs in either
