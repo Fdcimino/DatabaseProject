@@ -16,17 +16,21 @@ require node.js to run not complied version
 - clone repo
 - run npm init
 
-
 ## to run the program
 - npm start 
 
 ## TODO:
-- add to playlist
+### coding wise
 - create user
+- add to playlist
 - remove from playlist
-- search
 - look at users playlist
 - clicking on album or artist shows all songs in either
+- fix some of the queries
+### database wise
+- need appears_on filled
+- need songs filled
+
 
 ## quick run down of how this application work
 Two threads

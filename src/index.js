@@ -68,7 +68,15 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 
 ipcMain.on('getAllSongs', (event, arg) =>{
-  client.query('SELECT * FROM song', (err, res) => {
+  client.query('SELECT * FROM song INNER JOIN appears_on ON song.s_id = appears_on.s_id INNER JOIN album on appears_on.a_id = album.a_id;', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    event.reply('allSongs', res.rows)
+  })
+})
+
+//This is the search version
+ipcMain.on('getSongs', (event, arg) =>{
+  client.query('SELECT * FROM song WHERE LOWER(title) LIKE LOWER(%\''+ arg + '\'%);', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allSongs', res.rows)
   })
@@ -88,6 +96,15 @@ ipcMain.on('getAllUsers', (event, arg) =>{
   })
 })
 
+
+//This is the search version
+ipcMain.on('getUsers', (event, arg) =>{
+  client.query('SELECT * FROM listener', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    event.reply('allUsers', res.rows)
+  })
+})
+
 ipcMain.on('getAllArtists', (event, arg) =>{
   client.query('SELECT * FROM artist', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
@@ -95,15 +112,27 @@ ipcMain.on('getAllArtists', (event, arg) =>{
   })
 })
 
+
+
+
 ipcMain.on('getAllAlbums', (event, arg) =>{
-  client.query('SELECT * FROM album', (err, res) => {
+  client.query('SELECT * FROM album INNER JOIN released_by on album.a_id = released_by.a_id INNER JOIN artist on artist.name = released_by.name', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allAlbums', res.rows)
   })
 })
 
+
 ipcMain.on('getAllPlaylists', (event, arg) =>{
   client.query('SELECT * FROM playlist', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    event.reply('allPlaylists', res.rows)
+  })
+})
+
+ipcMain.on('updatePlaylist', (event, arg) =>{
+  console.log(arg)
+  client.query('UPDATE playlist SET description = \'' + arg.description +'\', name = \'' + arg.name +'\', no_songs = ' + arg.num +', likes = ' + arg.likes +' WHERE p_id=' + arg.id +';', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allPlaylists', res.rows)
   })

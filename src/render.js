@@ -8,7 +8,11 @@ allAlbums = []
 allPlaylists = []
 currentUser = ""
 
-
+function load() {
+    getAllSongs()
+    getAllUsers()
+    getAllPlaylists()
+};
 
 function setUsername(){
     username = document.getElementById("Username").value
@@ -72,10 +76,17 @@ function showSongs(){
 }
 
 function getAllSongs(){
-    ipcRenderer.send('getAllSongs')
+    toSearch = document.getElementById("toSearch")
+    search = document.getElementById("searchTerms")
+    if(toSearch.checked){
+        ipcRenderer.send('getSongs', search.value)
+        console.log()
+    }else{
+        ipcRenderer.send('getAllSongs')
+    } 
 }
 
-getAllSongs()
+
 
 //The next functions gets all users
 ipcRenderer.on('allUsers', (event, arg) => {
@@ -103,7 +114,6 @@ function getAllUsers(){
     ipcRenderer.send('getAllUsers')
 }
 
-getAllUsers()
 
 //The next functions gets all artists
 ipcRenderer.on('allArtists', (event, arg) => {
@@ -129,7 +139,15 @@ function showArtists(){
 }
 
 function getAllArtists(){
-    ipcRenderer.send('getAllArtists')
+    toSearch = document.getElementById("toSearch")
+    search = document.getElementById("searchTerms")
+    if(toSearch.checked){
+        ipcRenderer.send('getArtists', search.value)
+        console.log()
+    }else{
+        ipcRenderer.send('getAllArtists')
+    }  
+    
 }
 
 //The next functions gets all artists
@@ -149,7 +167,7 @@ function showAlbums(){
         li.className = "collection-item blue-grey darken-1 waves-effect waves-light"
         let text = document.createElement('p')
         console.log(element)
-        text.innerHTML = element.title
+        text.innerHTML = element.title +" &emsp; released by: " + element.name
         li.appendChild(text)
         centerList.appendChild(li)
     })
@@ -183,7 +201,13 @@ function showPlaylists(){
 }
 
 function getAllPlaylists(){
-    ipcRenderer.send('getAllPlaylists')
+    toSearch = document.getElementById("toSearch")
+    search = document.getElementById("searchTerms")
+    if(toSearch.checked){
+        ipcRenderer.send('getPlaylists', search.value)
+        console.log()
+    }else{
+        ipcRenderer.send('getAllPlaylists')
+    }  
 }
 
-getAllPlaylists()
