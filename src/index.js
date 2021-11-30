@@ -112,8 +112,15 @@ ipcMain.on('getAllArtists', (event, arg) =>{
   })
 })
 
-
-
+ipcMain.on('getAlbums', (event, arg) =>{
+  client.query('SELECT * FROM album INNER JOIN released_by on album.a_id = released_by.a_id INNER JOIN artist on artist.name = released_by.name WHERE artist.name = \'' + arg + '\';', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    if(res){
+      event.reply('allAlbums', res.rows)
+    }
+    
+  })
+})
 
 ipcMain.on('getAllAlbums', (event, arg) =>{
   client.query('SELECT * FROM album INNER JOIN released_by on album.a_id = released_by.a_id INNER JOIN artist on artist.name = released_by.name', (err, res) => {
@@ -121,7 +128,6 @@ ipcMain.on('getAllAlbums', (event, arg) =>{
     event.reply('allAlbums', res.rows)
   })
 })
-
 
 ipcMain.on('getAllPlaylists', (event, arg) =>{
   client.query('SELECT * FROM playlist', (err, res) => {

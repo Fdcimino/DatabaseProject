@@ -130,6 +130,9 @@ function showArtists(){
     allArtists.forEach(element =>{
         let li = document.createElement('li')
         li.className = "collection-item blue-grey darken-1 waves-effect waves-light"
+        li.addEventListener("click", function() {
+            getAllAlbumsFromArtist(element.name)
+         }, false)
         let text = document.createElement('p')
         console.log(element)
         text.innerHTML = element.name
@@ -171,6 +174,10 @@ function showAlbums(){
         li.appendChild(text)
         centerList.appendChild(li)
     })
+}
+
+function getAllAlbumsFromArtist(artist){
+    ipcRenderer.send('getAlbums', artist)
 }
 
 function getAllAlbums(){
