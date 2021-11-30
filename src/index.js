@@ -65,10 +65,14 @@ app.on('activate', () => {
 });
 
 // In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+// code.
+
+//SQL base strings to make it easier to manage the requests
+const SONG = "SELECT * FROM song INNER JOIN appears_on ON song.s_id = appears_on.s_id INNER JOIN album on appears_on.a_id = album.a_id"
+const ALBUM = 'SELECT * FROM album INNER JOIN released_by on album.a_id = released_by.a_id INNER JOIN artist on artist.name = released_by.name'
 
 ipcMain.on('getAllSongs', (event, arg) =>{
-  client.query('SELECT * FROM song INNER JOIN appears_on ON song.s_id = appears_on.s_id INNER JOIN album on appears_on.a_id = album.a_id;', (err, res) => {
+  client.query(SONG + ';', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allSongs', res.rows)
   })
@@ -76,7 +80,7 @@ ipcMain.on('getAllSongs', (event, arg) =>{
 
 //This is the search version
 ipcMain.on('getSongs', (event, arg) =>{
-  client.query('SELECT * FROM song WHERE LOWER(title) LIKE LOWER(%\''+ arg + '\'%);', (err, res) => {
+  client.query(SONG + 'WHERE LOWER(title) LIKE LOWER(%\''+ arg + '\'%);', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allSongs', res.rows)
   })
@@ -113,7 +117,7 @@ ipcMain.on('getAllArtists', (event, arg) =>{
 })
 
 ipcMain.on('getAlbums', (event, arg) =>{
-  client.query('SELECT * FROM album INNER JOIN released_by on album.a_id = released_by.a_id INNER JOIN artist on artist.name = released_by.name WHERE artist.name = \'' + arg + '\';', (err, res) => {
+  client.query(ALBUM + ' WHERE artist.name = \'' + arg + '\';', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     if(res){
       event.reply('allAlbums', res.rows)
@@ -123,7 +127,7 @@ ipcMain.on('getAlbums', (event, arg) =>{
 })
 
 ipcMain.on('getAllAlbums', (event, arg) =>{
-  client.query('SELECT * FROM album INNER JOIN released_by on album.a_id = released_by.a_id INNER JOIN artist on artist.name = released_by.name', (err, res) => {
+  client.query(ALBUM + ';', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allAlbums', res.rows)
   })

@@ -27,6 +27,7 @@ require node.js to run not complied version
 - look at users playlist
 - clicking on album or artist shows all songs in either
 - fix some of the queries
+
 ### database wise
 - need appears_on filled
 - need songs filled
