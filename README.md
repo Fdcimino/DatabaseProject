@@ -20,7 +20,6 @@ require node.js to run not complied version
 - npm start 
 
 ## TODO:
-### coding wise
 - create user
 - add to playlist
 - remove from playlist
@@ -28,18 +27,13 @@ require node.js to run not complied version
 - clicking on album or artist shows all songs in either
 - fix some of the queries
 
-### database wise
-- need appears_on filled
-- need songs filled
-
-
 ## quick run down of how this application work
-Two threads
-- render
-- index
+index.js is where the program starts. This is where the browser window gets created and opens index.html
+render.js is ran on index.html
 
-render thread is incharge on the ui. It send and listens to requests from the index thread using ipcRenderer
+all we need to edit on index.js is below line 72. I may change some minor stuff above that line when we are finished so the menu bar doesnt show but thats all boilerplate. 
 
-index thread gets the requests and responds using the ipcmain 
+USE crl + Shift + i to open up dev tools.
+console.logs from the render.js will showup there
 
-the index thread is the thread that sends for the sql requests while the render uses the responses to show it on html
+console.logs form the index.js will showup in the console you ran npm start

@@ -1,3 +1,5 @@
+//this thread opens the window then runs sql requests no aditions needed till line 72.
+//WE only care about the stuff under like 72
 const { app, BrowserWindow, ipcMain } = require('electron');
 const {Client} = require('pg');
 const path = require('path');
@@ -68,24 +70,39 @@ app.on('activate', () => {
 // code.
 
 //SQL base strings to make it easier to manage the requests
-const SONG = "SELECT * FROM song INNER JOIN appears_on ON song.s_id = appears_on.s_id INNER JOIN album on appears_on.a_id = album.a_id"
+const SONG = "SELECT *, song.title as songTitle FROM song INNER JOIN appears_on ON song.s_id = appears_on.s_id INNER JOIN album on appears_on.a_id = album.a_id"
 const ALBUM = 'SELECT * FROM album INNER JOIN released_by on album.a_id = released_by.a_id INNER JOIN artist on artist.name = released_by.name'
 
+// all the functions below this are the sql queries called by a event sent from the render.js
+//they run a query on the database and get the data back then send the response to the render.js
+
+//gets all songs in the database
 ipcMain.on('getAllSongs', (event, arg) =>{
-  client.query(SONG + ';', (err, res) => {
-    console.log(err ? err.stack : res.rows) // Hello World!
-    event.reply('allSongs', res.rows)
+  client.query(SONG + ';', (err, res) => { // runs a query async then runs functions in the curly brackets
+    console.log(err ? err.stack : res) // throws error if no response
+    event.reply('allSongs', res.rows) //sends an event for the render thread to read
   })
 })
 
-//This is the search version
+//This gets all songs based on a search of the title
 ipcMain.on('getSongs', (event, arg) =>{
-  client.query(SONG + 'WHERE LOWER(title) LIKE LOWER(%\''+ arg + '\'%);', (err, res) => {
+  client.query(SONG + ' WHERE LOWER(title) LIKE LOWER(%\''+ arg + '\'%);', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
+    event.reply('allSongs')
+  })
+})
+
+//This gets all songs based on an album
+ipcMain.on('getSongsAlb', (event, arg) =>{
+  console.log(arg)
+  client.query(SONG + ' WHERE album.title = \''+ arg + '\';', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    console.log(res)
     event.reply('allSongs', res.rows)
   })
 })
 
+//this gets all playlist made by a user
 ipcMain.on('getAllPlaylistByUser', (event, arg) =>{
   client.query('SELECT * FROM playlist, listener WHERE username=' + arg +' AND creator_id = l_id;', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
@@ -93,6 +110,7 @@ ipcMain.on('getAllPlaylistByUser', (event, arg) =>{
   })
 })
 
+//this gets all users
 ipcMain.on('getAllUsers', (event, arg) =>{
   client.query('SELECT * FROM listener', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
@@ -101,14 +119,7 @@ ipcMain.on('getAllUsers', (event, arg) =>{
 })
 
 
-//This is the search version
-ipcMain.on('getUsers', (event, arg) =>{
-  client.query('SELECT * FROM listener', (err, res) => {
-    console.log(err ? err.stack : res.rows) // Hello World!
-    event.reply('allUsers', res.rows)
-  })
-})
-
+//this gets all the artists
 ipcMain.on('getAllArtists', (event, arg) =>{
   client.query('SELECT * FROM artist', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
@@ -116,6 +127,7 @@ ipcMain.on('getAllArtists', (event, arg) =>{
   })
 })
 
+//this gets the albums from an artist 
 ipcMain.on('getAlbums', (event, arg) =>{
   client.query(ALBUM + ' WHERE artist.name = \'' + arg + '\';', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
@@ -126,6 +138,7 @@ ipcMain.on('getAlbums', (event, arg) =>{
   })
 })
 
+//this gets all albums
 ipcMain.on('getAllAlbums', (event, arg) =>{
   client.query(ALBUM + ';', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
@@ -133,6 +146,7 @@ ipcMain.on('getAllAlbums', (event, arg) =>{
   })
 })
 
+//this gets all the playlists in the database
 ipcMain.on('getAllPlaylists', (event, arg) =>{
   client.query('SELECT * FROM playlist', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
@@ -140,10 +154,15 @@ ipcMain.on('getAllPlaylists', (event, arg) =>{
   })
 })
 
+//this updates the playlist
 ipcMain.on('updatePlaylist', (event, arg) =>{
   console.log(arg)
   client.query('UPDATE playlist SET description = \'' + arg.description +'\', name = \'' + arg.name +'\', no_songs = ' + arg.num +', likes = ' + arg.likes +' WHERE p_id=' + arg.id +';', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allPlaylists', res.rows)
   })
+})
+
+ipcMain.on('signup', (event, arg) =>{
+  console.log(arg)
 })
