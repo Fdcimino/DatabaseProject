@@ -22,7 +22,7 @@ require node.js 17.1 to run not complied version
 ## TODO:
 - add to playlist (in progress by frank)
 - remove from playlist
-- look at users playlist (in programs by frank)
+- look at users playlist (in progress by frank)
 - fix some of the queries
 - search the ui is there just has to search
 
