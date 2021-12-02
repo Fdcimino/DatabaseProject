@@ -14,7 +14,7 @@ require node.js 17.1 to run not complied version
 
 ## how to setup
 - clone repo
-- run npm init
+- run npm install
 
 ## to run the program
 - npm start 
