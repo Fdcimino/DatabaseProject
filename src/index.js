@@ -166,3 +166,15 @@ ipcMain.on('updatePlaylist', (event, arg) =>{
 ipcMain.on('signup', (event, arg) =>{
   console.log(arg)
 })
+
+ipcMain.on('createPlaylist', (event, arg) => {
+  console.log(arg)
+})
+
+ipcMain.on('getUserPlaylists', (event, arg) => {
+  console.log(arg)
+  client.query('SELECT * FROM playlist INNER JOIN creates ON playlist.p_id = creates.p_id INNER JOIN listener on listener.l_id = creates.l_id WHERE listener.username = \'' + arg + '\';', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    event.reply('userPlaylists', res.rows)
+  })
+})
