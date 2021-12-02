@@ -25,6 +25,8 @@ require node.js 17.1 to run not complied version
 - look at users playlist (in progress by frank)
 - fix some of the queries
 - search the ui is there just has to search
+- SQL for creating a user
+- SQL for making a playlist
 
 ## quick run down of how this application work
 index.js is where the program starts. This is where the browser window gets created and opens index.html
