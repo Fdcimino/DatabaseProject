@@ -1,7 +1,7 @@
 # DatabaseProject
  Music database
 
-require node.js to run not complied version
+require node.js 17.1 to run not complied version
 
 ## libs used
 ### node js
