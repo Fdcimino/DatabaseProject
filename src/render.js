@@ -1,5 +1,5 @@
 //we need the ipc renderer to communicate with the index thread
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, ipcMain } = require('electron');
 
 //all is from a early editions basicly this is all the data shown in the lists even if searched through
 //this is only the current data
@@ -38,7 +38,6 @@ function showSongs(){
         li.className = "collection-item  blue-grey darken-1"
         let text = document.createElement('p')
 
-        var addDiv = ""
         if(currentUser != ""){
             addDiv = document.createElement('div')
             addDiv.className = "fixed-action-btn"
@@ -48,14 +47,9 @@ function showSongs(){
             addIcon.innerHTML = "add"
             addIcon.className = "material-icons"
             addButton.appendChild(addIcon)
-
-
-
             addButton.addEventListener("click", function() {
-                
-             }, false)
-
-            addDiv.appendChild(addButton)
+                addToPlayListPage(element.s_id)
+            })
         }
        
 
@@ -75,6 +69,30 @@ function showSongs(){
         }
         
         li.appendChild(playButton)
+        centerList.appendChild(li)
+    })
+}
+
+function addToPlayListPage(songID){
+    centerTitle = document.getElementById("centerTitle")
+    centerList = document.getElementById("centerList")
+    centerTitle.innerHTML = "Songs"
+    centerList.innerHTML = ""
+    userlists.forEach(element =>{
+        let li = document.createElement('li')
+        li.className = "collection-item blue-grey darken-1 waves-effect waves-light"
+        li.addEventListener("click", function() {
+            toAdd = {
+                playlist: element.p_id,
+                song: songID
+            }
+            ipcRenderer.send("addToPlaylist", toAdd)
+            //showSongs()
+         }, false)
+        let text = document.createElement('p')
+        console.log(element)
+        text.innerHTML = element.name
+        li.appendChild(text)
         centerList.appendChild(li)
     })
 }
@@ -100,6 +118,55 @@ ipcRenderer.on('allUsers', (event, arg) => {
     showUsers()
 })
 
+ipcRenderer.on('showSongsPlaylist', (event, arg) => {
+    showSongsArg(arg.songs, arg.title)
+})
+
+function showSongsArg(songs, title){
+    centerTitle = document.getElementById("centerTitle")
+    centerList = document.getElementById("centerList")
+    centerTitle.innerHTML = title
+    centerList.innerHTML = ""
+    songs.forEach(element =>{
+        let li = document.createElement('li')
+        li.className = "collection-item  blue-grey darken-1"
+        let text = document.createElement('p')
+
+        if(currentUser != ""){
+            addDiv = document.createElement('div')
+            addDiv.className = "fixed-action-btn"
+            addButton = document.createElement('a')
+            addButton.className = "btn btn-large waves-effect waves-light green right fixP"
+            let addIcon = document.createElement('i')
+            addIcon.innerHTML = "add"
+            addIcon.className = "material-icons"
+            addButton.appendChild(addIcon)
+            addButton.addEventListener("click", function() {
+                addToPlayListPage(element.s_id)
+            })
+        }
+       
+
+        let playButton = document.createElement('a')
+        playButton.className = "btn btn-large waves-effect waves-light green right fixP"
+        let playIcon = document.createElement('i')
+        playIcon.innerHTML = "fast_forward"
+        playIcon.className = "material-icons"
+        playButton.appendChild(playIcon)
+        
+        console.log(element)
+        text.innerHTML = element.songtitle + " &emsp; plays: " + element.no_plays + '</br>' + element.title
+        li.appendChild(text)
+        if( currentUser != ""){
+
+            li.appendChild(addButton)
+        }
+        
+        li.appendChild(playButton)
+        centerList.appendChild(li)
+    })
+}
+
 //shows all users that are in the allUsers array. 
 function showUsers(){
     centerTitle = document.getElementById("rightTitle")
@@ -111,6 +178,9 @@ function showUsers(){
         let text = document.createElement('p')
         console.log(element)
         text.innerHTML = element.username
+        li.addEventListener("click", function() {
+            ipcRenderer.send("getUserPlaylists", element.username)
+        })
         li.appendChild(text)
         centerList.appendChild(li)
     })
@@ -207,23 +277,28 @@ function getAllAlbums(){
 //waits for all Playlists event to be called
 ipcRenderer.on('allPlaylists', (event, arg) => {
     allPlaylists = arg;
+    userlists = arg
     console.log(allPlaylists)
-    showPlaylists()
+    showPlaylists(allPlaylists, "all")
 })
 
 //shows all the playlists on the left
-function showPlaylists(){
+function showPlaylists(playlists, user){
     centerTitle = document.getElementById("leftTitle")
     centerList = document.getElementById("leftList")
-    centerTitle.innerHTML ="All playlists"
+    centerTitle.innerHTML = user + " Playlists"
     centerList.innerHTML = ""
-    allPlaylists.forEach(element =>{
+    playlists.forEach(element =>{
         let li = document.createElement('li')
         li.className = "collection-item blue-grey darken-1 waves-effect waves-light"
         let text = document.createElement('p')
         console.log(element)
-        text.innerHTML = element.title
+        text.innerHTML = element.name
         li.appendChild(text)
+        li.addEventListener("click", function() {
+            ipcRenderer.send("viewPlaylist", element.name)
+            console.log(element.name)
+         }, false)
         centerList.appendChild(li)
     })
 }
@@ -282,6 +357,7 @@ function showLoginFeatures(){
         createPlayList()
      }, false)
     ipcRenderer.send("getUserPlaylists", currentUser);
+    //getAllSongs()
 }
 //Shows signup screen in the center list when pressed
 function createPlayList(){
@@ -309,9 +385,10 @@ function createPlayList(){
     li2.className = "collection-item  blue-grey darken-1"
     let button = document.createElement('button')
     button.className = 'btn right'
-    button.innerHTML = 'Signup'
+    button.innerHTML = 'Create'
     button.addEventListener("click", function() {
         info = {
+            username: currentUser,
             name: name.value,
             description: description.value,
             num: 0,
@@ -328,9 +405,16 @@ function createPlayList(){
     centerList.appendChild(li2)
 }
 
-ipcRenderer.on("playlistMade", (event, arg) => {
-    showPlaylists()
+
+ipcRenderer.on("newList", (event, arg) => {
+    ipcRenderer.send("getUserPlaylists", currentUser);
 })
+
+ipcRenderer.on("viewSelectedList", (event, arg) => {
+    console.log(arg)
+    showSongsArg(arg, arg[0].name)
+})
+
 
 //Shows signup screen in the center list when pressed
 function SignUpBTN(){
@@ -377,4 +461,6 @@ function SignUpBTN(){
 
 ipcRenderer.on("userPlaylists", (event, args) => {
     console.log(args)
+    showPlaylists(args.data, args.user)
+    userlists = args.data
 })
