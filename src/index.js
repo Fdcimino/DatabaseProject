@@ -86,7 +86,7 @@ ipcMain.on('getAllSongs', (event, arg) =>{
 
 //This gets all songs based on a search of the title
 ipcMain.on('getSongs', (event, arg) =>{
-  client.query(SONG + ' WHERE LOWER(title) LIKE LOWER(%\''+ arg + '\'%);', (err, res) => {
+  client.query(SONG + ' WHERE LOWER(song.title) LIKE LOWER(\'%'+ arg + '%\');', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allSongs')
   })
@@ -162,19 +162,10 @@ ipcMain.on('updatePlaylist', (event, arg) =>{
     event.reply('allPlaylists', res.rows)
   })
 })
-
+//this signs up a user
 ipcMain.on('signup', (event, arg) =>{
   console.log(arg)
-})
-
-ipcMain.on('createPlaylist', (event, arg) => {
-  console.log(arg)
-})
-
-ipcMain.on('getUserPlaylists', (event, arg) => {
-  console.log(arg)
-  client.query('SELECT * FROM playlist INNER JOIN creates ON playlist.p_id = creates.p_id INNER JOIN listener on listener.l_id = creates.l_id WHERE listener.username = \'' + arg + '\';', (err, res) => {
-    console.log(err ? err.stack : res.rows) // Hello World!
-    event.reply('userPlaylists', res.rows)
-  })
+  // client.query('INSERT INTO listener SET description = \'' + arg.description +'\', name = \'' + arg.name +'\', no_songs = ' + arg.num +', likes = ' + arg.likes +' WHERE p_id=' + arg.id +';', (err, res) => {
+  //   console.log(err ? err.stack : res.rows) // Hello World!
+  //   event.reply('allPlaylists', res.rows)
 })
