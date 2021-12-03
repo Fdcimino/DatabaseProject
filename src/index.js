@@ -100,6 +100,26 @@ ipcMain.on('getArtists', (event, arg) =>{
   })
 })
 
+
+//This gets all ablbums based on a search of the title
+ipcMain.on('getAlbumsSearch', (event, arg) =>{
+  client.query(ALBUM + ' WHERE LOWER(title) LIKE LOWER(\'%'+ arg + '%\');', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    if(res){
+      event.reply('allAlbums', res.rows)
+    }
+    
+  })
+})
+
+//This gets all artists based on a search of the name
+ipcMain.on('getArtists', (event, arg) =>{
+  client.query('SELECT * FROM artist' + ' WHERE LOWER(name) LIKE LOWER(\'%'+ arg + '%\');', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    event.reply('allSongs')
+  })
+})
+
 //This gets all songs based on an album
 ipcMain.on('getSongsAlb', (event, arg) =>{
   console.log(arg)
