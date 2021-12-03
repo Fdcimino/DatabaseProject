@@ -6,6 +6,8 @@
 
 require node.js 17.1 to run not complied version
 
+database dump is inside the databasedump.txt
+
 ## libs used
 ### node js
 - electron-forge

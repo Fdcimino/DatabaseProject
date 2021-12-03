@@ -1,0 +1,886 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.13 (Raspbian 11.13-0+deb10u1)
+-- Dumped by pg_dump version 14.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+--
+-- Name: album; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.album (
+    a_id integer NOT NULL,
+    title character varying(50) NOT NULL,
+    genre character varying(50) NOT NULL,
+    year integer NOT NULL,
+    no_songs integer NOT NULL
+);
+
+
+ALTER TABLE public.album OWNER TO cse412;
+
+--
+-- Name: appears_on; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.appears_on (
+    a_id integer NOT NULL,
+    s_id integer NOT NULL
+);
+
+
+ALTER TABLE public.appears_on OWNER TO cse412;
+
+--
+-- Name: artist; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.artist (
+    name character varying(50) NOT NULL,
+    monthly_listeners integer NOT NULL,
+    country character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.artist OWNER TO cse412;
+
+--
+-- Name: creates; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.creates (
+    l_id integer NOT NULL,
+    p_id integer NOT NULL
+);
+
+
+ALTER TABLE public.creates OWNER TO cse412;
+
+--
+-- Name: features; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.features (
+    p_id integer NOT NULL,
+    s_id integer NOT NULL
+);
+
+
+ALTER TABLE public.features OWNER TO cse412;
+
+--
+-- Name: listener; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.listener (
+    l_id integer NOT NULL,
+    username character varying(100) NOT NULL,
+    email character varying(100) NOT NULL,
+    followers integer NOT NULL
+);
+
+
+ALTER TABLE public.listener OWNER TO cse412;
+
+--
+-- Name: playlist; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.playlist (
+    p_id integer NOT NULL,
+    description character varying(100) NOT NULL,
+    name character varying(50) NOT NULL,
+    creator_id integer NOT NULL,
+    no_songs integer NOT NULL,
+    likes integer NOT NULL
+);
+
+
+ALTER TABLE public.playlist OWNER TO cse412;
+
+--
+-- Name: released_by; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.released_by (
+    name character varying(50) NOT NULL,
+    a_id integer NOT NULL
+);
+
+
+ALTER TABLE public.released_by OWNER TO cse412;
+
+--
+-- Name: song; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.song (
+    s_id integer NOT NULL,
+    genre character varying(50) NOT NULL,
+    title character varying(50) NOT NULL,
+    duration real NOT NULL,
+    no_plays integer NOT NULL
+);
+
+
+ALTER TABLE public.song OWNER TO cse412;
+
+--
+-- Name: testtable; Type: TABLE; Schema: public; Owner: cse412
+--
+
+CREATE TABLE public.testtable (
+    id integer NOT NULL,
+    column1 character varying(20),
+    column2 character varying(20)
+);
+
+
+ALTER TABLE public.testtable OWNER TO cse412;
+
+--
+-- Data for Name: album; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.album (a_id, title, genre, year, no_songs) FROM stdin;
+1	Montero	Pop	2021	15
+2	Planet Her	Pop	2021	14
+3	SOUR	Pop	2021	11
+4	Certified Lover Boy	Rap	2021	21
+5	FUCK LOVE	Pop	2021	22
+6	+	Pop	2011	16
+7	Music Of The Spheres	Pop	2021	12
+8	Justice	Pop	2021	16
+9	Future Nostalgia	Pop	2020	11
+10	25	Pop	2015	11
+11	Kind of Blue	Jazz	1959	5
+12	Round About Midnight	Jazz	1957	10
+13	Sketches of Spain	Jazz	1960	5
+14	Bitches Brew	Jazz	1970	7
+15	Abbey Road	Rock	1969	17
+16	Let It Be	Rock	1970	12
+17	Sgt Peppers Lonely Hearts Club Band	Rock	1967	13
+18	Revolver	Rock	1966	14
+19	The Beatles	Rock	1968	30
+20	Rubber Soul	Rock	1965	14
+21	Help!	Rock	1965	14
+22	Beatles For Sale	Rock	1964	14
+23	A Hard Days Night	Rock	1964	13
+24	With The Beatles	Rock	1963	14
+25	Please Please Me	Rock	1963	14
+26	Pablo Honey	Alternative	1993	12
+27	The Bends	Alternative	1995	12
+28	OK Computer	Alternative	1997	12
+29	Kid A	Alternative	2000	11
+30	Amnesiac	Alternative	2001	11
+31	Hail To the Thief	Alternative	2003	14
+32	In Rainbows	Alternative	2007	10
+33	The King Of Limbs	Alternative	2011	8
+34	A Moon Shaped Pool	Alternative	2016	11
+35	InnerSpeaker	Alternative	2010	11
+36	Lonerism	Alternative	2012	12
+37	Currents	Alternative	2015	13
+38	The Slow Rush	Alternative	2020	12
+39	Amala	Pop	2018	13
+40	Hot Pink	Pop	2019	12
+41	So Far Gone	Hip Hop	2009	18
+42	Thank Me Later	Hip Hop	2010	14
+43	Take Care	Hip Hop	2011	19
+44	Nothing Was The Same	Hip Hop	2013	13
+45	If Youre Reading This Its Too Late	Hip Hop	2015	17
+46	What A Time To Be Alive	Hip Hop	2015	11
+47	Views	Hip Hop	2016	20
+48	More Life	Hip Hop	2017	22
+49	Scorpion	Hip Hop	2018	25
+50	Care Package	Hip Hop	2019	17
+51	x	Pop	2014	16
+52	÷	Pop	2017	16
+53	19	Pop	2008	12
+54	21	Pop	2011	11
+55	30	Pop	2021	12
+56	Parachutes	Alternative	2000	10
+57	A Rush of Blood to the Head	Alternative	2002	11
+58	X&Y	Alternative	2005	13
+59	Viva La Vida or Death and All His Friends	Pop	2008	10
+60	Mylo Xyloto	Pop	2011	14
+61	Ghost Stories	Pop	2014	9
+62	A Head Full of Dreams	Pop	2015	11
+63	Everyday Life	Pop	2019	16
+64	Dua Lipa	Pop	2017	12
+65	My World	Pop	2009	7
+66	My World 2.0	Pop	2010	10
+67	Under The Mistletoe	Holiday	2011	11
+68	Believe	Pop	2012	13
+69	Journals	Pop	2014	16
+70	Purpose	Pop	2015	19
+71	Changes	Pop	2020	17
+\.
+
+
+--
+-- Data for Name: appears_on; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.appears_on (a_id, s_id) FROM stdin;
+1	1
+1	3
+1	4
+1	5
+1	6
+1	7
+1	8
+1	9
+1	10
+1	11
+1	12
+1	13
+1	14
+1	15
+8	2
+1	16
+8	17
+8	18
+8	19
+8	20
+8	21
+8	22
+8	23
+8	24
+8	25
+8	26
+8	27
+8	28
+8	29
+8	30
+8	31
+8	32
+9	33
+9	34
+9	35
+9	36
+9	37
+9	38
+9	39
+9	40
+9	41
+9	42
+9	43
+2	44
+2	45
+2	46
+2	47
+2	48
+2	49
+2	50
+2	51
+2	52
+2	53
+2	54
+2	55
+2	56
+2	57
+3	58
+3	59
+3	60
+3	61
+3	62
+3	63
+3	64
+3	65
+3	66
+3	67
+3	68
+4	69
+4	70
+4	71
+4	72
+4	73
+4	74
+4	75
+4	76
+4	77
+4	78
+4	79
+4	80
+4	81
+4	82
+4	83
+4	84
+4	85
+4	86
+4	87
+4	88
+4	89
+6	90
+6	91
+6	92
+6	93
+6	94
+6	95
+6	96
+6	97
+6	98
+6	99
+6	100
+6	101
+10	102
+10	103
+10	104
+10	105
+10	106
+10	107
+10	108
+10	109
+10	110
+10	111
+10	112
+11	113
+11	114
+11	115
+11	116
+11	117
+15	118
+15	119
+15	120
+15	121
+15	122
+15	123
+15	124
+15	125
+15	126
+15	127
+15	128
+15	129
+15	130
+15	131
+15	132
+15	133
+15	134
+28	135
+28	136
+28	137
+28	138
+28	139
+28	140
+28	141
+28	142
+28	143
+28	144
+28	145
+28	146
+37	147
+37	148
+37	149
+37	150
+37	151
+37	152
+37	153
+37	154
+37	155
+37	156
+37	157
+37	158
+37	159
+59	160
+59	161
+59	162
+59	163
+59	164
+59	165
+59	166
+59	167
+59	168
+59	169
+\.
+
+
+--
+-- Data for Name: artist; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.artist (name, monthly_listeners, country) FROM stdin;
+Lil Nas X	60000000	United States
+Doja Cat	61000000	United States
+Olivia Rodrigo	48000000	United States
+Drake	60000000	Canada
+The Kid LAROI	57000000	United States
+Ed Sheeran	74000000	United States
+Coldplay	62000000	England
+Justin Bieber	84000000	United States
+Dua Lipa	67000000	United States
+Adele	54000000	England
+The Beatles	24290027	England
+Tame Impala	14170321	United States
+Radiohead	14764028	England
+Miles Davis	2437370	United States
+\.
+
+
+--
+-- Data for Name: creates; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.creates (l_id, p_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: features; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.features (p_id, s_id) FROM stdin;
+1	1
+1	3
+2	1
+2	3
+\.
+
+
+--
+-- Data for Name: listener; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.listener (l_id, username, email, followers) FROM stdin;
+1	douchepickle	pickle@gmail.com	10
+2	musicfan	musicislife@gmail.com	125
+3	jazzer365	giantsteps@gmail.com	30
+4	test	test@test.com	0
+\.
+
+
+--
+-- Data for Name: playlist; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.playlist (p_id, description, name, creator_id, no_songs, likes) FROM stdin;
+1	my jams	a list of my jams	2	0	0
+2	old	oldies	1	0	0
+\.
+
+
+--
+-- Data for Name: released_by; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.released_by (name, a_id) FROM stdin;
+The Beatles	15
+The Beatles	16
+The Beatles	17
+The Beatles	18
+The Beatles	19
+The Beatles	20
+The Beatles	21
+The Beatles	22
+The Beatles	23
+The Beatles	24
+The Beatles	25
+Lil Nas X	1
+Doja Cat	2
+Olivia Rodrigo	3
+Drake	4
+The Kid LAROI	5
+Ed Sheeran	6
+Coldplay	7
+Justin Bieber	8
+Dua Lipa	9
+Adele	10
+Miles Davis	11
+Miles Davis	12
+Miles Davis	13
+Miles Davis	14
+Radiohead	26
+Radiohead	27
+Radiohead	28
+Radiohead	29
+Radiohead	30
+Radiohead	31
+Radiohead	32
+Radiohead	33
+Radiohead	34
+Tame Impala	35
+Tame Impala	36
+Tame Impala	37
+Tame Impala	38
+Doja Cat	39
+Doja Cat	40
+Drake	41
+Drake	42
+Drake	43
+Drake	44
+Drake	45
+Drake	46
+Drake	47
+Drake	48
+Drake	49
+Drake	50
+Ed Sheeran	51
+Ed Sheeran	52
+Adele	53
+Adele	54
+Adele	55
+Coldplay	56
+Coldplay	57
+Coldplay	58
+Coldplay	59
+Coldplay	60
+Coldplay	61
+Coldplay	62
+Coldplay	63
+Dua Lipa	64
+Justin Bieber	65
+Justin Bieber	66
+Justin Bieber	67
+Justin Bieber	68
+Justin Bieber	69
+Justin Bieber	70
+Justin Bieber	71
+\.
+
+
+--
+-- Data for Name: song; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.song (s_id, genre, title, duration, no_plays) FROM stdin;
+1	Pop	MONTERO	2.16000009	1000000000
+2	Pop	Anyone	3.0999999	700000000
+3	Pop	DEAD RIGHT NOW	3.1400001	27951471
+4	Pop	INDUSTRY BABY (feat. Jack Harlow)	3.31999993	765717948
+5	Pop	THATS WHAT I WANT	2.23000002	223235364
+6	Pop	THE ART OF REALIZATION	0.239999995	29777
+7	Pop	SCOOP (feat. Doja Cat)	2.53999996	48815732
+8	Pop	ONE OF ME (feat. Elton John)	2.41000009	22187459
+9	Pop	LOST IN THE CITADEL	2.5	22319034
+10	Pop	DOLLA SIGN SLIME (feat. Megan Thee Stallion)	2.25	31221241
+11	Pop	TALES OF DOMINICA	2.25999999	28811294
+12	Pop	SUN GOES DOWN	2.48000002	99062076
+13	Pop	VOID	4.07999992	15644016
+14	Pop	DONT WANT IT	2.0999999	23719466
+15	Pop	LIFE AFTER SALEM	3.29999995	14336162
+16	Pop	AM I DREAMING (feat. Miley Cyrus)	3.02999997	23924233
+17	Pop	2 Much	2.31999993	64352117
+18	Pop	Deserve You	3.06999993	57251828
+19	Pop	As I Am (feat. Khalid)	2.53999996	129507828
+20	Pop	Off My Face	2.3599999	92127337
+21	Pop	Holy (feat. Chance The Rapper)	3.31999993	559664160
+22	Pop	Unstable (feat. The Kid LAROI)	2.38000011	80954047
+23	Pop	MLK Interlude	1.44000006	16077919
+24	Pop	Die For You (feat. Dominic Fike)	3.18000007	50778808
+25	Pop	Hold On	2.5	397561412
+26	Pop	Somebody	2.58999991	47811128
+27	Pop	Ghost	2.32999992	169478949
+28	Pop	Peaches (feat. Daniel Caesar & Giveon)	3.18000007	924255820
+29	Pop	Love You Different (feat. BEAM)	3.05999994	45866417
+30	Pop	Loved By You (feat. Burna Boy)	2.3900001	51758347
+31	Pop	Anyone	3.0999999	394957070
+32	Pop	Lonely (with benny blanco)	2.28999996	520197001
+33	Pop	Future Nostalgia	3.03999996	119014395
+34	Pop	Don't Start	3.02999997	1712915473
+35	Pop	Cool	3.28999996	102574479
+36	Pop	Physical	3.23000002	596288306
+37	Pop	Levitating	3.23000002	377670092
+38	Pop	Pretty Please	3.1400001	130709961
+39	Pop	Hallucinate	3.27999997	212161985
+40	Pop	Love Again	4.17999983	262964124
+41	Pop	Break My Heart	3.41000009	783149570
+42	Pop	Good In Bed	3.38000011	79931472
+43	Pop	Boys Will Be Boys	2.46000004	71938278
+44	Pop	Woman	2.51999998	434130447
+45	Pop	Naked	3.43000007	47640855
+46	Pop	Payday (feat. Young Thug)	3.31999993	38010847
+47	Pop	Get Into It (Yuh)	2.18000007	188847374
+48	Pop	Need to Know	3.29999995	459549348
+49	Pop	I Don't Do Drugs (feat. Ariana Grande)	3.07999992	74615114
+50	Pop	Love To Dream	3.3599999	36335853
+51	Pop	You Right	3.05999994	218094165
+52	Pop	Been Like This	2.56999993	45418048
+53	Pop	Options (feat. JID)	2.3900001	38965615
+54	Pop	Ain't Shit	2.53999996	220009555
+55	Pop	Imagine	2.27999997	26723112
+56	Pop	Alone	3.48000002	27404903
+57	Pop	Kiss Me More (feat. SZA)	3.27999997	886026725
+58	Pop	brutal	2.23000002	258427345
+59	Pop	traitor	3.49000001	511528302
+60	Pop	drivers license	4.01999998	1181134617
+61	Pop	1 step forward, 3 steps back	2.43000007	166122887
+62	Pop	deja vu	3.3499999	647915315
+63	Pop	good 4 u	2.57999992	1084451901
+64	Pop	enough for you	3.22000003	188749507
+65	Pop	happier	2.54999995	373061108
+66	Pop	jealousy, jealousy	2.52999997	283487484
+67	Pop	favorite crime	2.31999993	328654294
+68	Pop	hope ur ok	3.28999996	135616685
+69	Hip Hop	Champagne Poetry	5.36000013	96975973
+70	Hip Hop	Papi's Home	2.57999992	62887788
+71	Hip Hop	Girls Want Girls (with Lil Baby)	3.41000009	161556586
+72	Hip Hop	In The Bible (with Lil Durk & Giveon)	4.55999994	69000392
+73	Hip Hop	Love All (with JAY-Z)	3.48000002	60657967
+74	Hip Hop	Fair Trade (with Travis Scott)	4.51000023	194289505
+75	Hip Hop	Way 2 Sexy (with Future & Young Thug)	4.17000008	217175335
+76	Hip Hop	TSU	5.07999992	64546553
+77	Hip Hop	N 2 Deep	4.32999992	54588983
+78	Hip Hop	Pipe Down	3.25	47150734
+79	Hip Hop	Yebba's Heartbreak	2.13000011	36458061
+80	Hip Hop	No Friends In The Industry	3.24000001	74653263
+81	Hip Hop	Knife Talk (with 21 Savage ft. Project Pat)	4.01999998	176514042
+82	Hip Hop	7am On Bridle Path	3.58999991	41039398
+83	Hip Hop	Race My Mind	4.28999996	41639221
+84	Hip Hop	Fountains (with Tems)	3.11999989	44464436
+85	Hip Hop	Get Along Better	3.49000001	33731915
+86	Hip Hop	You Only Live Twice (with Lil Wayne & Rick Ross)	3.32999992	36560212
+87	Hip Hop	IMY2 (with Kid Cudi)	4.11999989	44564038
+88	Hip Hop	Fucking Fans	4.05000019	28006083
+89	Hip Hop	The Remorse	5.51000023	24128791
+90	Pop/Folk	The A Team	4.17999983	735264242
+91	Pop/Folk	Drunk	3.20000005	208190251
+92	Pop/Folk	U.N.I	3.48000002	86751709
+93	Pop/Folk	Grade 8	2.58999991	58956449
+94	Pop/Folk	Wake Me Up	3.49000001	98860214
+95	Pop/Folk	Small Bump	4.19000006	198190523
+96	Pop/Folk	This	3.1500001	69623615
+97	Pop/Folk	The City	3.53999996	45298908
+98	Pop/Folk	Lego House	3.04999995	402400481
+99	Pop/Folk	You Need Me, I Don't Need You	3.4000001	148209259
+100	Pop/Folk	Kiss Me	4.4000001	375337900
+101	Pop/Folk	Give Me Love	8.46000004	424831652
+102	Pop	Hello	4.55000019	1216604434
+103	Pop	Send My Love (To Your New Lover)	3.43000007	764830974
+104	Pop	I Miss You	5.48000002	102033256
+105	Pop	When We Were Young	4.5	809252303
+106	Pop	Remedy	4.05000019	179283847
+107	Pop	Water Under the Bridge	4	437374728
+108	Pop	River Lea	3.45000005	87528842
+109	Pop	Love In The Dark	4.44999981	138333071
+110	Pop	Million Years Ago	3.47000003	128439128
+111	Pop	All I Ask	4.30999994	356011786
+112	Pop	Sweetest Devotion	4.11000013	52644598
+113	Jazz	So What	9.22000027	67256595
+114	Jazz	Freddie Freeloader	9.46000004	31420775
+115	Jazz	Blue in Green	5.36999989	110953338
+116	Jazz	All Blues	11.3199997	22586874
+117	Jazz	Flamenco Sketches	9.26000023	42452417
+118	Rock	Come Together	4.19000006	463670907
+119	Rock	Something	3.01999998	179002820
+120	Rock	Maxwell's Silver Hammer	3.26999998	35098964
+121	Rock	Oh! Darling	3.26999998	89674969
+122	Rock	Octopus's Garden	2.5	52471496
+123	Rock	I Want You (She's So Heavy)	7.46999979	48679587
+124	Rock	Here Comes The Sun	3.04999995	735391486
+125	Rock	Because	2.45000005	37694583
+126	Rock	You Never Give Me Your Money	4.01999998	33987261
+127	Rock	Sun King	2.25999999	26205037
+128	Rock	Mean Mr Mustard	1.05999994	22258922
+129	Rock	Polythene Pam	1.12	21748182
+130	Rock	She Came In Through The Bathroom Window	1.58000004	28896884
+131	Rock	Golden Slumbers	1.30999994	62165128
+132	Rock	Carry That Weight	1.36000001	42093975
+133	Rock	The End	2.21000004	28280808
+134	Rock	Her Majesty	0.25	187313
+135	Alternative	Airbag	4.46999979	43693472
+136	Alternative	Paranoid Android	6.26999998	131707362
+137	Alternative	Subterranean Homesick Alien	4.26999998	37207476
+138	Alternative	Exit Music (For A Film)	4.26999998	93495494
+139	Alternative	Let Down	4.59000015	54396531
+140	Alternative	Karma Police	4.23999977	302654920
+141	Alternative	Fitter Happier	1.57000005	17631697
+142	Alternative	Electioneering	3.5	22221468
+143	Alternative	Climbing Up the Walls	4.44999981	27146755
+144	Alternative	No Surprises	3.49000001	215270094
+145	Alternative	Lucky	4.17999983	37372066
+146	Alternative	The Tourist	5.26000023	22588787
+147	Alternative	Let It Happen	7.46999979	287165115
+148	Alternative	Nangs	1.47000003	56015559
+149	Alternative	The Moment	4.1500001	99212753
+150	Alternative	Yes I'm Changing	4.30000019	123862130
+151	Alternative	Eventually	5.17999983	121684702
+152	Alternative	Gossip	0.550000012	32787401
+153	Alternative	The Less I Know The Better	3.3599999	915360664
+154	Alternative	Past Life	3.48000002	45615181
+155	Alternative	Disciples	1.48000002	66149979
+156	Alternative	'Cause I'm A Man	4.01000023	96724235
+157	Alternative	Reality In Motion	4.11999989	43686452
+158	Alternative	Love/Paranoia	3.04999995	55532896
+159	Alternative	New Person, Same Old Mistakes	6.03000021	165217555
+160	Pop	Life in Technicolor	2.28999996	46666877
+161	Pop	Cemeteries of London	3.21000004	35276859
+162	Pop	Lost!	3.55999994	60314717
+163	Pop	42	3.56999993	34627536
+164	Pop	Lovers in Japan	6.51000023	51444855
+165	Pop	Yes	7.05999994	26337067
+166	Pop	Viva La Vida	4.01999998	975310166
+167	Pop	Violet Hill	3.42000008	107071646
+168	Pop	Strawberry Swing	4.09000015	67069928
+169	Pop	Death and All His Friends	6.17999983	36396132
+\.
+
+
+--
+-- Data for Name: testtable; Type: TABLE DATA; Schema: public; Owner: cse412
+--
+
+COPY public.testtable (id, column1, column2) FROM stdin;
+\.
+
+
+--
+-- Name: album album_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.album
+    ADD CONSTRAINT album_pkey PRIMARY KEY (a_id);
+
+
+--
+-- Name: appears_on appears_on_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.appears_on
+    ADD CONSTRAINT appears_on_pkey PRIMARY KEY (a_id, s_id);
+
+
+--
+-- Name: artist artist_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.artist
+    ADD CONSTRAINT artist_pkey PRIMARY KEY (name);
+
+
+--
+-- Name: creates creates_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.creates
+    ADD CONSTRAINT creates_pkey PRIMARY KEY (l_id, p_id);
+
+
+--
+-- Name: features features_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.features
+    ADD CONSTRAINT features_pkey PRIMARY KEY (p_id, s_id);
+
+
+--
+-- Name: listener listener_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.listener
+    ADD CONSTRAINT listener_pkey PRIMARY KEY (l_id);
+
+
+--
+-- Name: playlist playlist_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.playlist
+    ADD CONSTRAINT playlist_pkey PRIMARY KEY (p_id);
+
+
+--
+-- Name: released_by released_by_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.released_by
+    ADD CONSTRAINT released_by_pkey PRIMARY KEY (name, a_id);
+
+
+--
+-- Name: song song_pkey; Type: CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.song
+    ADD CONSTRAINT song_pkey PRIMARY KEY (s_id);
+
+
+--
+-- Name: appears_on appears_on_a_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.appears_on
+    ADD CONSTRAINT appears_on_a_id_fkey FOREIGN KEY (a_id) REFERENCES public.album(a_id) ON DELETE CASCADE;
+
+
+--
+-- Name: appears_on appears_on_s_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.appears_on
+    ADD CONSTRAINT appears_on_s_id_fkey FOREIGN KEY (s_id) REFERENCES public.song(s_id) ON DELETE CASCADE;
+
+
+--
+-- Name: creates creates_l_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.creates
+    ADD CONSTRAINT creates_l_id_fkey FOREIGN KEY (l_id) REFERENCES public.listener(l_id) ON DELETE CASCADE;
+
+
+--
+-- Name: creates creates_p_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.creates
+    ADD CONSTRAINT creates_p_id_fkey FOREIGN KEY (p_id) REFERENCES public.playlist(p_id) ON DELETE CASCADE;
+
+
+--
+-- Name: features features_p_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.features
+    ADD CONSTRAINT features_p_id_fkey FOREIGN KEY (p_id) REFERENCES public.playlist(p_id) ON DELETE CASCADE;
+
+
+--
+-- Name: features features_s_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.features
+    ADD CONSTRAINT features_s_id_fkey FOREIGN KEY (s_id) REFERENCES public.song(s_id) ON DELETE CASCADE;
+
+
+--
+-- Name: playlist playlist_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.playlist
+    ADD CONSTRAINT playlist_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES public.listener(l_id) ON DELETE CASCADE;
+
+
+--
+-- Name: released_by released_by_a_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.released_by
+    ADD CONSTRAINT released_by_a_id_fkey FOREIGN KEY (a_id) REFERENCES public.album(a_id) ON DELETE CASCADE;
+
+
+--
+-- Name: released_by released_by_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: cse412
+--
+
+ALTER TABLE ONLY public.released_by
+    ADD CONSTRAINT released_by_name_fkey FOREIGN KEY (name) REFERENCES public.artist(name) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
