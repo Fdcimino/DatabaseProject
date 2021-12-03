@@ -79,7 +79,7 @@ const ALBUM = 'SELECT * FROM album INNER JOIN released_by on album.a_id = releas
 //gets all songs in the database
 ipcMain.on('getAllSongs', (event, arg) =>{
   client.query(SONG + ';', (err, res) => { // runs a query async then runs functions in the curly brackets
-    console.log(err ? err.stack : res) // throws error if no response
+    console.log(err ? err.stack : res.rows) // throws error if no response
     event.reply('allSongs', res.rows) //sends an event for the render thread to read
   })
 })
@@ -88,7 +88,7 @@ ipcMain.on('getAllSongs', (event, arg) =>{
 ipcMain.on('getSongs', (event, arg) =>{
   client.query(SONG + ' WHERE LOWER(song.title) LIKE LOWER(\'%'+ arg + '%\');', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
-    event.reply('allSongs')
+    event.reply('allSongs', res.rows)
   })
 })
 
@@ -154,10 +154,16 @@ ipcMain.on('getAllAlbums', (event, arg) =>{
   })
 })
 
+lastPlaylistID = 0;
+
 //this gets all the playlists in the database
 ipcMain.on('getAllPlaylists', (event, arg) =>{
   client.query('SELECT * FROM playlist', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
+    res.rows.forEach((element) => {
+      if(element.p_id > lastPlaylistID)
+        lastPlaylistID = element.p_id
+    })
     event.reply('allPlaylists', res.rows)
   })
 })
@@ -173,7 +179,45 @@ ipcMain.on('updatePlaylist', (event, arg) =>{
 //this signs up a user
 ipcMain.on('signup', (event, arg) =>{
   console.log(arg)
-  // client.query('INSERT INTO listener SET description = \'' + arg.description +'\', name = \'' + arg.name +'\', no_songs = ' + arg.num +', likes = ' + arg.likes +' WHERE p_id=' + arg.id +';', (err, res) => {
-  //   console.log(err ? err.stack : res.rows) // Hello World!
-  //   event.reply('allPlaylists', res.rows)
 })
+
+ipcMain.on('createPlaylist', (event, arg) => {
+  console.log(arg)
+  lastPlaylistID += 1
+  client.query('SELECT * FROM listener WHERE listener.username = \'' + arg.username +'\';', (err, res2) => {
+    console.log(err ? err.stack : res2.rows)
+    client.query('INSERT INTO playlist VALUES('+ (lastPlaylistID) + ',\'' + arg.description + '\',\'' + arg.name + '\',' + res2.rows[0].l_id + ',0, 0);', (err, res) => {
+      console.log(err ? err.stack : res.rows)
+      event.reply('newList')
+    })
+  })
+    
+})
+
+ipcMain.on('addToPlaylist', (event, arg) => {
+  client.query('INSERT INTO features VALUES('+ (arg.playlist) + ',' + arg.song + ');', (err, res) => {
+    console.log(err ? err.stack : res.rows)
+    
+  })
+})
+
+ipcMain.on('viewPlaylist', (event , arg) => {
+  console.log(arg)
+  client.query('SELECT *, song.title as songtitle FROM playlist INNER JOIN features on playlist.p_id = features.p_id INNER JOIN song on song.s_id = features.s_id INNER JOIN appears_on ON song.s_id = appears_on.s_id INNER JOIN album on appears_on.a_id = album.a_id INNER JOIN listener on listener.l_id = playlist.creator_id WHERE playlist.name = \'' +arg +'\';', (err, res) => {
+    console.log(res.rows)
+    event.reply('viewSelectedList', res.rows)
+  })
+})
+
+ipcMain.on('getUserPlaylists', (event, arg) => {
+  console.log(arg)
+  client.query('SELECT * FROM playlist  INNER JOIN listener on listener.l_id = playlist.creator_id WHERE listener.username = \'' + arg + '\';', (err, res) => {
+    console.log(err ? err.stack : res.rows) // Hello World!
+    obj = {
+      user: arg,
+      data: res.rows
+    }
+    event.reply('userPlaylists', obj)
+  })
+})
+
