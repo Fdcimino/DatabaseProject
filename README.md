@@ -2,10 +2,7 @@
  Music database
 
 ## To run the compiled version
-- go to the out folder
-- open databaseproject folder
-- run databaseproject.exe
-- if that doesnt work run the setup.exe in the make folder
+-go to releases and download latest release
 
 require node.js 17.1 to run not complied version
 
