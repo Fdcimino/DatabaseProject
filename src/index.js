@@ -171,7 +171,6 @@ ipcMain.on('updatePlaylist', (event, arg) =>{
 //this signs up a user
 ipcMain.on('signup', (event, arg) =>{
   console.log(arg)
-<<<<<<< HEAD
 })
 
 ipcMain.on('createPlaylist', (event, arg) => {
@@ -214,9 +213,3 @@ ipcMain.on('getUserPlaylists', (event, arg) => {
   })
 })
 
-=======
-  // client.query('INSERT INTO listener SET description = \'' + arg.description +'\', name = \'' + arg.name +'\', no_songs = ' + arg.num +', likes = ' + arg.likes +' WHERE p_id=' + arg.id +';', (err, res) => {
-  //   console.log(err ? err.stack : res.rows) // Hello World!
-  //   event.reply('allPlaylists', res.rows)
-})
->>>>>>> 723c7ba2143223afbb829f6b083a4b8db45dce51
