@@ -30,6 +30,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1600,
     height: 900,
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -96,7 +97,7 @@ ipcMain.on('getSongs', (event, arg) =>{
 ipcMain.on('getArtists', (event, arg) =>{
   client.query('SELECT * FROM artist' + ' WHERE LOWER(name) LIKE LOWER(\'%'+ arg + '%\');', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
-    event.reply('allSongs')
+    event.reply('allArtists', res.rows)
   })
 })
 
@@ -112,13 +113,6 @@ ipcMain.on('getAlbumsSearch', (event, arg) =>{
   })
 })
 
-//This gets all artists based on a search of the name
-ipcMain.on('getArtists', (event, arg) =>{
-  client.query('SELECT * FROM artist' + ' WHERE LOWER(name) LIKE LOWER(\'%'+ arg + '%\');', (err, res) => {
-    console.log(err ? err.stack : res.rows) // Hello World!
-    event.reply('allSongs')
-  })
-})
 
 //This gets all songs based on an album
 ipcMain.on('getSongsAlb', (event, arg) =>{
@@ -138,10 +132,15 @@ ipcMain.on('getAllPlaylistByUser', (event, arg) =>{
   })
 })
 
+lastUserID = 0
 //this gets all users
 ipcMain.on('getAllUsers', (event, arg) =>{
   client.query('SELECT * FROM listener', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
+    res.rows.forEach((element) => {
+      if(element.l_id > lastUserID)
+        lastUserID = element.l_id
+    })
     event.reply('allUsers', res.rows)
   })
 })
@@ -198,7 +197,12 @@ ipcMain.on('updatePlaylist', (event, arg) =>{
 })
 //this signs up a user
 ipcMain.on('signup', (event, arg) =>{
+  lastUserID++
   console.log(arg)
+  client.query('INSERT INTO listener VALUES('+ (lastUserID) + ',\'' + arg.user + '\',\'' + arg.email + '\', 0);', (err, res) => {
+    console.log(err ? err.stack : res.rows)
+    event.reply('signup')
+  })
 })
 
 ipcMain.on('createPlaylist', (event, arg) => {

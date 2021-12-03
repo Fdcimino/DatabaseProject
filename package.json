@@ -1,8 +1,8 @@
 {
-  "name": "test",
-  "productName": "test",
+  "name": "databaseproject",
+  "productName": "databaseproject",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "database final project",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",

@@ -1,6 +1,12 @@
 # DatabaseProject
  Music database
 
+## To run the compiled version
+- go to the out folder
+- open databaseproject folder
+- run databaseproject.exe
+- if that doesnt work run the setup.exe in the make folder
+
 require node.js 17.1 to run not complied version
 
 ## libs used
@@ -19,22 +25,3 @@ require node.js 17.1 to run not complied version
 ## to run the program
 - npm start 
 
-## TODO:
-- add to playlist (in progress by frank)
-- remove from playlist
-- look at users playlist (in progress by frank)
-- fix some of the queries
-- search the ui is there just has to search
-- SQL for creating a user
-- SQL for making a playlist
-
-## quick run down of how this application work
-index.js is where the program starts. This is where the browser window gets created and opens index.html
-render.js is ran on index.html
-
-all we need to edit on index.js is below line 72. I may change some minor stuff above that line when we are finished so the menu bar doesnt show but thats all boilerplate. 
-
-USE crl + Shift + i to open up dev tools.
-console.logs from the render.js will showup there
-
-console.logs form the index.js will showup in the console you ran npm start

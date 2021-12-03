@@ -87,7 +87,7 @@ function addToPlayListPage(songID){
                 song: songID
             }
             ipcRenderer.send("addToPlaylist", toAdd)
-            //showSongs()
+            showSongs()
          }, false)
         let text = document.createElement('p')
         console.log(element)
@@ -271,7 +271,14 @@ function getSongsAlb(album){
 
 //call when album is clicked on
 function getAllAlbums(){
-    ipcRenderer.send('getAllAlbums')
+    toSearch = document.getElementById("toSearch")
+    search = document.getElementById("searchTerms")
+    if(toSearch.checked){
+        ipcRenderer.send('getAlbumsSearch', search.value)
+        console.log()
+    }else{
+        ipcRenderer.send('getAllAlbums')
+    }
 }
 
 //waits for all Playlists event to be called
@@ -317,47 +324,51 @@ function getAllPlaylists(){
 
 //called when loginBTN pressed shows login screen in the center. 
 function loginBTN(){
-    centerTitle = document.getElementById("centerTitle")
-    centerList = document.getElementById("centerList")
-    centerTitle.innerHTML = "Login"
-    centerList.innerHTML = ""
+    if(currentUser != ""){
 
-    let li = document.createElement('li')
-    li.className = "collection-item  blue-grey darken-1"
+    }else{
+        centerTitle = document.getElementById("centerTitle")
+        centerList = document.getElementById("centerList")
+        centerTitle.innerHTML = "Login"
+        centerList.innerHTML = ""
 
-    let username = document.createElement('input')
-    username.placeholder = "Username"
-    username.type = 'text';
-    username.className = "white-text"
+        let li = document.createElement('li')
+        li.className = "collection-item  blue-grey darken-1"
 
-    let li2 = document.createElement('li')
-    li2.className = "collection-item  blue-grey darken-1"
-    let button = document.createElement('button')
-    button.className = 'btn right'
-    button.innerHTML = 'Login'
-    button.addEventListener("click", function() {
-        currentUser = username.value
-        console.log(currentUser)
-        showLoginFeatures()
-     }, false)
+        let username = document.createElement('input')
+        username.placeholder = "Username"
+        username.type = 'text';
+        username.className = "white-text"
 
-    li.appendChild(username)
-    li2.appendChild(button)
-    centerList.appendChild(li)
-    centerList.appendChild(li2)
+        let li2 = document.createElement('li')
+        li2.className = "collection-item  blue-grey darken-1"
+        let button = document.createElement('button')
+        button.className = 'btn right'
+        button.innerHTML = 'Login'
+        button.addEventListener("click", function() {
+            currentUser = username.value
+            console.log(currentUser)
+            showLoginFeatures()
+        }, false)
 
-    
+        li.appendChild(username)
+        li2.appendChild(button)
+        centerList.appendChild(li)
+        centerList.appendChild(li2)
+    }
 }
 
 function showLoginFeatures(){
     let button = document.getElementById("createPlayListButton")
     button.className = "btn-floating btn-large waves-effect waves-light red right"
     button.innerHTML = "New List";
+    document.getElementById("loginBTN").innerHTML = currentUser
+    document.getElementById("signupBTN").innerHTML = "logout"
     button.addEventListener("click", function() {
         createPlayList()
      }, false)
     ipcRenderer.send("getUserPlaylists", currentUser);
-    //getAllSongs()
+    getAllSongs()
 }
 //Shows signup screen in the center list when pressed
 function createPlayList(){
@@ -418,49 +429,61 @@ ipcRenderer.on("viewSelectedList", (event, arg) => {
 
 //Shows signup screen in the center list when pressed
 function SignUpBTN(){
-    centerTitle = document.getElementById("centerTitle")
-    centerList = document.getElementById("centerList")
-    centerTitle.innerHTML = "Signup"
-    centerList.innerHTML = ""
+    if(currentUser != ""){
+        currentUser = ""
+        document.getElementById("loginBTN").innerHTML = "login"
+        document.getElementById("signupBTN").innerHTML = "signup"
+    }else{
+        centerTitle = document.getElementById("centerTitle")
+        centerList = document.getElementById("centerList")
+        centerTitle.innerHTML = "Signup"
+        centerList.innerHTML = ""
 
-    let li = document.createElement('li')
-    li.className = "collection-item  blue-grey darken-1"
-    let username = document.createElement('input')
-    username.placeholder = "Username"
-    username.type = 'text';
-    username.className = "white-text"
+        let li = document.createElement('li')
+        li.className = "collection-item  blue-grey darken-1"
+        let username = document.createElement('input')
+        username.placeholder = "Username"
+        username.type = 'text';
+        username.className = "white-text"
 
-    let li3 = document.createElement('li')
-    li3.className = "collection-item  blue-grey darken-1"
-    let email = document.createElement('input')
-    email.placeholder = "Email"
-    email.type = 'text';
-    email.className = "white-text"
+        let li3 = document.createElement('li')
+        li3.className = "collection-item  blue-grey darken-1"
+        let email = document.createElement('input')
+        email.placeholder = "Email"
+        email.type = 'text';
+        email.className = "white-text"
 
 
-    let li2 = document.createElement('li')
-    li2.className = "collection-item  blue-grey darken-1"
-    let button = document.createElement('button')
-    button.className = 'btn right'
-    button.innerHTML = 'Signup'
-    button.addEventListener("click", function() {
-        info = {
-            user: username.value,
-            email: email.value
-        }
-        ipcRenderer.send("signup", info)
-     }, false)
+        let li2 = document.createElement('li')
+        li2.className = "collection-item  blue-grey darken-1"
+        let button = document.createElement('button')
+        button.className = 'btn right'
+        button.innerHTML = 'Signup'
+        button.addEventListener("click", function() {
+            info = {
+                user: username.value,
+                email: email.value
+            }
+            ipcRenderer.send("signup", info)
+            currentUser = username.value;
+        }, false)
 
-    li.appendChild(username)
-    li3.appendChild(email)
-    li2.appendChild(button)
-    centerList.appendChild(li)
-    centerList.appendChild(li3)
-    centerList.appendChild(li2)
+        li.appendChild(username)
+        li3.appendChild(email)
+        li2.appendChild(button)
+        centerList.appendChild(li)
+        centerList.appendChild(li3)
+        centerList.appendChild(li2)
+    }
 }
 
 ipcRenderer.on("userPlaylists", (event, args) => {
     console.log(args)
     showPlaylists(args.data, args.user)
     userlists = args.data
+})
+
+ipcRenderer.on("signup", (event, args) => {
+    getAllUsers()
+    showLoginFeatures()
 })
