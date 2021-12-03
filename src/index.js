@@ -86,7 +86,7 @@ ipcMain.on('getAllSongs', (event, arg) =>{
 
 //This gets all songs based on a search of the title
 ipcMain.on('getSongs', (event, arg) =>{
-  client.query(SONG + ' WHERE LOWER(title) LIKE LOWER(%\''+ arg + '\'%);', (err, res) => {
+  client.query(SONG + ' WHERE LOWER(song.title) LIKE LOWER(\'%'+ arg + '%\');', (err, res) => {
     console.log(err ? err.stack : res.rows) // Hello World!
     event.reply('allSongs', res.rows)
   })
@@ -168,9 +168,10 @@ ipcMain.on('updatePlaylist', (event, arg) =>{
     event.reply('allPlaylists', res.rows)
   })
 })
-
+//this signs up a user
 ipcMain.on('signup', (event, arg) =>{
   console.log(arg)
+<<<<<<< HEAD
 })
 
 ipcMain.on('createPlaylist', (event, arg) => {
@@ -213,3 +214,9 @@ ipcMain.on('getUserPlaylists', (event, arg) => {
   })
 })
 
+=======
+  // client.query('INSERT INTO listener SET description = \'' + arg.description +'\', name = \'' + arg.name +'\', no_songs = ' + arg.num +', likes = ' + arg.likes +' WHERE p_id=' + arg.id +';', (err, res) => {
+  //   console.log(err ? err.stack : res.rows) // Hello World!
+  //   event.reply('allPlaylists', res.rows)
+})
+>>>>>>> 723c7ba2143223afbb829f6b083a4b8db45dce51
